@@ -1,0 +1,38 @@
+{
+  "pilot": "ctxcomp-pilot-v0",
+  "frozen": false,
+  "status_note": "DRAFT. Budgets, prompt, fitting rules are provisional until dev is complete.",
+  "data": {
+    "longbench_file": "data/raw/longbench/data/hotpotqa.jsonl",
+    "hotpot_file": "data/raw/hotpotqa/distractor/validation-00000-of-00001.parquet",
+    "revision_tag": "THUDM/LongBench@5e628be;hotpotqa.jsonl sha256=a0005ab2a1bc",
+    "split_seed": 20261019,
+    "n_dev": 20,
+    "n_eval": 80
+  },
+  "budgets": [1024, 2048],
+  "budget_definition": "final server input tokens (server tokenizer), incl. system prompt, chat template, instruction, question, special tokens",
+  "prompt_spec": "lb1_hotpotqa_qwen25chat_seg_v1",
+  "transport": "server-tokenizer token IDs (uint32 LE) for the context segment; question as UTF-8 in header",
+  "server": {
+    "model": "Qwen/Qwen2.5-14B-Instruct",
+    "revision": "cf98f3b3bbb457ad9e2bb7baf9a0125b6b88caa8",
+    "dtype": "bfloat16",
+    "attn_implementation": "flash_attention_2",
+    "generation": {"max_new_tokens": 32, "do_sample": false, "repetition_penalty": 1.0},
+    "max_input_tokens": 32736
+  },
+  "methods": {
+    "full": {"question_access": false, "note": "reference, not an upper bound"},
+    "specpc_pilot": {"question_access": true, "draft": "Qwen/Qwen2.5-0.5B-Instruct@7ae5576",
+      "params": {"window_size": 64, "pool_type": "max", "kernel_size": 64, "neighbor_tokens": 64,
+                 "reduction_type": "max", "lookahead_tokens": 1, "starting_layer_index": 8, "weighted_query": true}},
+    "specpc_repro": {"question_access": true, "flow": "official_repro"},
+    "llmlingua2": {"question_access": false, "model": "microsoft/llmlingua-2-xlm-roberta-large-meetingbank",
+      "force_tokens": ["\n", "?", "!", "."], "drop_consecutive": true, "max_iters": 4},
+    "sent_bm25": {"question_access": true, "k1": 1.5, "b": 0.75},
+    "sent_uniform": {"question_access": false}
+  },
+  "correctness": {"primary": "em", "secondary": ["contains", "qa_f1"]},
+  "timing": {"warmup_items": 2, "repeats": 1, "cuda_sync": true}
+}
