@@ -62,16 +62,20 @@ class MockBackend:
             titles = re.findall(r"Passage \d+:\n([^\n]+)", text)
             qs = set(word_tokens(q))
             ans = max(titles, key=lambda t: (len(qs & set(word_tokens(t))), -titles.index(t)), default="unknown")
-        out = dict(answer=ans, n_out_tokens=len(self.tok.encode(ans)), t_prefill_decode_s=time.perf_counter() - t0)
+        out = dict(answer=ans, n_out_tokens=len(self.tok.encode(ans)), t_prefill_decode_s=time.perf_counter() - t0,
+                   hit_max_new_tokens=False, gpu_peak_mem_mb=None, answer_model="MOCK")
         if self.debug_visible:
             out["visible_text"] = text
         return out
 
 
 class HFBackend:
+    """Real answer model. args: model, revision, attn_implementation. The process sees exactly one
+    GPU (CUDA_VISIBLE_DEVICES set by the launcher); the whole model goes to cuda:0."""
+
     def __init__(self, args):
         if os.environ.get("CCPILOT_ALLOW_MODELS") != "1":
-            raise RuntimeError("model loading disabled in this stage")
+            raise RuntimeError("model loading disabled (set CCPILOT_ALLOW_MODELS=1)")
         import torch
         from transformers import AutoModelForCausalLM
 
@@ -80,22 +84,30 @@ class HFBackend:
         self.gen = GEN_PROFILES[args["gen_profile"]]
         self.model = AutoModelForCausalLM.from_pretrained(
             args["model"], revision=args["revision"], torch_dtype=torch.bfloat16,
-            attn_implementation=args.get("attn_implementation", "flash_attention_2"), device_map="auto").eval()
+            attn_implementation=args.get("attn_implementation", "flash_attention_2"), device_map={"": 0}).eval()
+        self.model.generation_config.pad_token_id = 151645
         self.eos = [151645, 151643]
+        self.model_id = f"{args['model']}@{args['revision']}"
 
     def generate(self, ids):
         torch = self.torch
         x = torch.tensor([ids], device=self.model.device)
+        torch.cuda.reset_peak_memory_stats()
         torch.cuda.synchronize()
         t0 = time.perf_counter()
         with torch.inference_mode():
-            out = self.model.generate(input_ids=x, attention_mask=torch.ones_like(x), pad_token_id=151645, **self.gen)
+            out = self.model.generate(input_ids=x, attention_mask=torch.ones_like(x), **self.gen)
         torch.cuda.synchronize()
+        dt = time.perf_counter() - t0
         new = out[0, len(ids):].tolist()
+        n_raw = len(new)
+        hit_eos = bool(new) and new[-1] in self.eos
         while new and new[-1] in self.eos:
             new.pop()
         return dict(answer=self.tok.decode(new).replace("<|im_end|>", "").strip(), n_out_tokens=len(new),
-                    t_prefill_decode_s=time.perf_counter() - t0)
+                    hit_max_new_tokens=(n_raw >= self.gen["max_new_tokens"] and not hit_eos),
+                    t_prefill_decode_s=dt, gpu_peak_mem_mb=torch.cuda.max_memory_allocated() / 2**20,
+                    answer_model=self.model_id)
 
 
 def main():

@@ -1,6 +1,9 @@
 external/
 data/raw/
-runs/
+runs/*
+!runs/real/
 __pycache__/
 *.pyc
 .pytest_cache/
+.venv-gpu/
+*.log

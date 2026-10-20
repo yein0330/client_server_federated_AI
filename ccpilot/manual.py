@@ -106,3 +106,60 @@ def primary_spans(ann: dict) -> list[tuple[int, int]]:
 
 def all_required_spans(ann: dict) -> list[tuple[int, int]]:
     return [(q["start"], q["end"]) for r in required(ann) for alt in r["alts"] for q in alt]
+
+
+# ---------------------------------------------------------------- key terms (mechanical)
+_STOP_CAP = {"The", "A", "An", "It", "He", "She", "They", "His", "Her", "Its", "Their", "In", "On", "At", "Of",
+             "As", "By", "For", "From", "This", "That", "These", "Those", "There", "After", "Before", "When"}
+_NEG = re.compile(r"\b(not|no|never|without|neither|nor|except|only)\b", re.I)
+
+
+def key_terms(text: str) -> list[str]:
+    """Mechanical key-term list of a quote: numbers, capitalised words (minus function words),
+    negation/limiting words. NOT a semantic judgement."""
+    nums = re.findall(r"\b\d[\w,.]*", text)  # whole numeric tokens incl. ordinals (6th) and 1,234
+    caps = [w for w in re.findall(r"\b[A-Z][\w'’&.-]*", text) if w not in _STOP_CAP and len(w) > 1]
+    negs = [m.group(0).lower() for m in _NEG.finditer(text)]
+    seen, out = set(), []
+    for t in nums + caps + negs:
+        t = t.rstrip(".,")
+        if t and t not in seen:
+            seen.add(t)
+            out.append(t)
+    return out
+
+
+def key_term_check(ctx: str, ann: dict, visible_context: str, best_alt: dict[str, int] | None = None) -> dict:
+    """For each required requirement: which key terms of its (best) alternative appear in the
+    server-visible context text. Word-boundary, case-sensitive (negations case-insensitive)."""
+    rows = {}
+    for r in required(ann):
+        k = (best_alt or {}).get(r["rid"], 0)
+        terms = []
+        for q in r["alts"][k]:
+            terms += key_terms(ctx[q["start"]:q["end"]])
+        terms = list(dict.fromkeys(terms))
+        miss = []
+        for t in terms:
+            flags = re.I if t.lower() in {"not", "no", "never", "without", "neither", "nor", "except", "only"} else 0
+            if not re.search(r"(?<!\w)" + re.escape(t) + r"(?!\w)", visible_context, flags):
+                miss.append(t)
+        rows[r["rid"]] = dict(alt=k, n_terms=len(terms), missing=miss)
+    return dict(per_requirement=rows, all_terms_present=all(not v["missing"] for v in rows.values()))
+
+
+def evaluate_manual(ctx: str, ann: dict, kept: list[tuple[int, int]], visible_context: str) -> dict:
+    """AI-written annotation evaluation: 'evidence-span character retention' (NOT semantic
+    preservation) + mechanical key-term presence."""
+    ch = score_requirements(ctx, ann, kept)
+    best = {e["rid"]: e["best_alt"] for e in ch["evidence"]}
+    kt = key_term_check(ctx, ann, visible_context, best)
+    for e in ch["evidence"]:
+        e["key_terms_missing"] = kt["per_requirement"][e["rid"]]["missing"]
+        e["intact"] = e["status"] == "preserved" and not e["key_terms_missing"]
+    return dict(annotation="manual_v1 (AI-written, human audit pending)", support=ann["support"],
+                metric_char="evidence-span character retention (>=0.9 preserved)",
+                requirements=ch["evidence"], n_required=ch["n_facts"],
+                n_char_preserved=ch["n_preserved"], all_char_preserved=ch["all_preserved"],
+                n_intact=sum(e["intact"] for e in ch["evidence"]),
+                all_intact=bool(ch["evidence"]) and all(e["intact"] for e in ch["evidence"]))

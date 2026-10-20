@@ -127,12 +127,15 @@ def load_official_select(allow_source_extract: bool = False):
         fn = ns["specpc_select_input_token_indices"]
         origin = "source_extract"
 
-    def select(attn: np.ndarray, cap: int, p: SpecPCParams, window_size: int | None = None, device="cpu"):
+    def select(attn, cap: int, p: SpecPCParams, window_size: int | None = None):
+        """attn: torch tensor -> used AS IS (same device/dtype as produced, like the official path);
+        numpy -> converted to a CPU tensor (model-free tests only). Returns np.ndarray positions."""
         cfg = types.SimpleNamespace(kernel_size=p.kernel_size, neighbor_tokens=p.neighbor_tokens,
                                     pool_type=p.pool_type, max_capacity_prompt=cap,
                                     window_size=p.window_size if window_size is None else window_size)
-        x = torch.as_tensor(np.asarray(attn), device=device)[None]
-        return fn(x, cfg)[0].cpu().numpy()
+        x = attn if isinstance(attn, torch.Tensor) else torch.as_tensor(np.asarray(attn))
+        select.last = dict(score_dtype=str(x.dtype), select_device=str(x.device))
+        return fn(x[None], cfg)[0].cpu().numpy()
 
     return select, origin
 
@@ -160,16 +163,18 @@ class SpecPCPilot(Compressor):
         pre = req.prompt.prefix_ids(req.tok)
         ctx_ids = req.tok.encode(req.context)
         full = pre + ctx_ids + req.prompt.suffix_ids(req.tok, req.question)
-        attn = np.asarray(self.score_fn(full), dtype=np.float64)
-        assert attn.shape == (len(full),), "score_fn must return one score per input token"
+        attn = self.score_fn(full)  # torch tensor (device/dtype as produced) or numpy (mock)
+        assert tuple(attn.shape) == (len(full),), "score_fn must return one score per input token"
         t1 = time.perf_counter()
         a, b = len(pre), len(pre) + len(ctx_ids)
+        sel_info = {}
         if req.context_budget >= len(ctx_ids):
             rel = list(range(len(ctx_ids)))
         elif self.selector is not None:
             rel = self.selector(attn[a:b], req.context_budget, self.params, window_size=0).tolist()
+            sel_info = dict(getattr(self.selector, "last", {}))
         else:  # numpy port: tests / tie study only
-            rel = (pilot_select(attn, a, b, req.context_budget, self.params) - a).tolist()
+            rel = (pilot_select(np.asarray(attn, dtype=np.float64), a, b, req.context_budget, self.params) - a).tolist()
         out_ids = [ctx_ids[i] for i in rel]
         offs = req.tok.offsets(req.context)
         kept = [offs[i] for i in rel]
@@ -177,7 +182,8 @@ class SpecPCPilot(Compressor):
         return CompressionResult(
             out_ids, kept, len(ctx_ids), t_compress_s=t1 - t0, t_fit_s=t2 - t1,
             info=dict(score_fn=self.score_fn_id, selector=self.selector_origin if self.selector else "numpy_port",
-                      selected_token_pos=rel, n_context_tokens=len(ctx_ids)))
+                      selected_token_pos=rel, n_context_tokens=len(ctx_ids), **sel_info,
+                      lookahead=getattr(self.score_fn, "last_lookahead", None)))
 
 
 class SpecPCRepro(Compressor):
@@ -202,15 +208,17 @@ class SpecPCRepro(Compressor):
         full_text = pre_text + req.context + req.prompt.suffix_text(req.question)
         full = req.tok.encode(full_text)
         offs = req.tok.offsets(full_text)
-        attn = np.asarray(self.score_fn(full), dtype=np.float64)
+        attn = self.score_fn(full)
         t1 = time.perf_counter()
         L = len(full)
+        sel_info = {}
         if self.total_budget >= L:
             sel = list(range(L))  # official: only reached with force_lookahead; selection keeps all
         elif self.selector is not None:
             sel = self.selector(attn, self.total_budget, self.params).tolist()
+            sel_info = dict(getattr(self.selector, "last", {}))
         else:
-            sel = official_select(attn, self.total_budget, self.params).tolist()
+            sel = official_select(np.asarray(attn, dtype=np.float64), self.total_budget, self.params).tolist()
         raw = [full[i] for i in sel]
         c0, c1 = len(pre_text), len(pre_text) + len(req.context)
         in_ctx = [i for i in sel if offs[i][0] >= c0 and offs[i][1] <= c1]
@@ -222,6 +230,7 @@ class SpecPCRepro(Compressor):
                     tokenization="joint", raw_ids=raw, n_total=L,
                     prefix_kept=sum(1 for i in sel if offs[i][1] <= c0), prefix_len=pre_n,
                     suffix_kept=sum(1 for i in sel if offs[i][0] >= c1), suffix_len=suf_n,
-                    boundary_tokens=L - n_ctx_tokens - pre_n - suf_n)
+                    boundary_tokens=L - n_ctx_tokens - pre_n - suf_n, **sel_info,
+                    lookahead=getattr(self.score_fn, "last_lookahead", None))
         return CompressionResult([full[i] for i in in_ctx], kept, n_ctx_tokens,
                                  t_compress_s=t1 - t0, t_fit_s=time.perf_counter() - t1, info=info)

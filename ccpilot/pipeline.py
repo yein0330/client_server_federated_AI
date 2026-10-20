@@ -40,7 +40,9 @@ def run_cell(item: dict, ann: dict | None, comp: Compressor, budget: int | None,
         payload_text_bytes=None, wire_bytes=None, t_compress_s=0.0, t_fit_s=0.0, t_serialize_s=0.0,
         t_transfer_s=None, t_ipc_roundtrip_s=0.0, t_server_s=0.0, server_input_sha=None, n_out_tokens=None,
         prediction_raw=None, prediction=None, answers=item["answers"], qa_f1=None, em=None, contains=None,
-        evidence=None, error=None, excluded=None,
+        evidence=None, error=None, excluded=None, backend="mock", condition=None, answer_model=None,
+        compressor_id=None, compression_artifact=None, context_ids_sha=None, server_input_check=None,
+        gpu_peak_mem_mb=None, hit_max_new_tokens=None, evidence_manual_ai=None, em_semantic_review=None,
     )
     prov = dict(run_id=run_id, sample_id=item["sample_id"], method=comp.method_id, budget=budget, flow=rec["flow"])
     if ctx_budget is not None and ctx_budget <= 0:

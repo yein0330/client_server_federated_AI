@@ -1,0 +1,24 @@
+{
+  "pilot": "ctxcomp-real-dev-v1",
+  "note": "L is Qwen2.5-7B-Instruct, NOT the official/paper 14B target: root disk had 23-29GB free (<29.55GB for 14B + env); 7B was already cached and hash-verified. Not a reproduction of the 0.5B->14B setting.",
+  "data": {
+    "longbench_file": "data/raw/longbench/data/hotpotqa.jsonl",
+    "hotpot_file": "data/raw/hotpotqa/distractor/validation-00000-of-00001.parquet",
+    "revision_tag": "THUDM/LongBench@5e628be;hotpotqa.jsonl sha256=a0005ab2a1bc"
+  },
+  "tokenizer_ref": "Qwen2.5 tokenizer.json sha256[:16]=c0382117ea329cdf (identical for 0.5B/7B/14B)",
+  "models": {
+    "S": {"model": "Qwen/Qwen2.5-0.5B-Instruct", "revision": "7ae557604adf67be50417f59c2c2f167def9a775"},
+    "L": {"model": "Qwen/Qwen2.5-7B-Instruct", "revision": "a09a35458c702b33eeacc393d103063234e8bc28"}
+  },
+  "compressor": "specpc_pilot with draft = S; official selection function imported (d70fabb), applied to the draft's bf16 GPU tensor",
+  "specpc_params": {"window_size": 64, "pool_type": "max", "kernel_size": 64, "neighbor_tokens": 64,
+                    "reduction_type": "max", "lookahead_tokens": 1, "starting_layer_index": 8, "weighted_query": true},
+  "budget": 2048,
+  "gen_profile": "pilot_common",
+  "attn_implementation": "flash_attention_2",
+  "dtype": "bfloat16",
+  "gpus": {"draft": 1, "S": 1, "L": 2},
+  "env": "py3.10, torch 2.6.0+cu124, transformers 4.51.3, flash-attn 2.7.3, PYTORCH_NVML_BASED_CUDA_CHECK=1",
+  "diag": {"sample": "all diag-eligible dev items under manual_v1 (17), fixed before any output", "rules": "D1-D8 with D5 v2 (common removal set)", "answer_model": "L"}
+}

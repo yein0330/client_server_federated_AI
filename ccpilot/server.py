@@ -31,9 +31,12 @@ def _read_frame(f) -> bytes:
 
 
 class ServerProcess:
-    def __init__(self, backend: str, backend_args: dict):
+    def __init__(self, backend: str, backend_args: dict, cuda_visible_devices: str | None = None,
+                 python: str | None = None):
         env = dict(os.environ, PYTHONPATH=str(ROOT))
-        self.p = subprocess.Popen([sys.executable, "-m", "ccpilot.server_worker", backend,
+        if cuda_visible_devices is not None:
+            env["CUDA_VISIBLE_DEVICES"] = cuda_visible_devices
+        self.p = subprocess.Popen([python or sys.executable, "-m", "ccpilot.server_worker", backend,
                                    json.dumps(backend_args)], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                   cwd=str(ROOT), env=env)
         self.t_load_s = json.loads(_read_frame(self.p.stdout))["t_load_s"]

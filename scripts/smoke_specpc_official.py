@@ -36,7 +36,7 @@ def main():
     os.chdir(OFFICIAL)  # official code opens dataset/longbench/*.json relative to repo root
     sys.path.insert(0, str(OFFICIAL))
     import draft_approx_llm.specpc.specpc as M
-    from dataset.longbench import LongBenchDataset
+    from dataset import load_dataset as official_load_dataset
     from draft_approx_llm import DraftApproxLLMConfig, patch_model
     from eval import load_model, run_sample
     from transformers import AutoTokenizer, __version__ as tv
@@ -59,7 +59,7 @@ def main():
     target = load_model(cfg["target_model"], tokenizer)
     t_load = time.perf_counter() - t0
     model = patch_model(target, draft, DraftApproxLLMConfig.from_dict(cfg["sparse_config"]))
-    ds = LongBenchDataset(tokenizer, **cfg["dataset"], model_cfg=cfg["target_model"])
+    ds = official_load_dataset(tokenizer, **cfg["dataset"], model_cfg=cfg["target_model"])  # official dispatcher
     ds.dataset = [rows[s] for s in dev]  # local pinned rows instead of HF download; same fields
     ip = InputProcessor(model, tokenizer, ds)
 
@@ -79,17 +79,21 @@ def main():
                         score_fn_id="draft:" + cfg["draft_model"]["model_name_or_path"], selector=sel_fn, selector_origin=origin)
     repro.total_budget = cap
     tok = HFTokenizer(ROOT / "data/raw/tokenizers/Qwen2.5-14B-Instruct/tokenizer.json", "Qwen/Qwen2.5-14B-Instruct@cf98f3b")
-    report = dict(transformers=tv, torch=torch.__version__, cfg=a.cfg, t_load_s=t_load, items=[])
+    report = dict(transformers=tv, torch=torch.__version__, cfg=a.cfg, t_load_s=t_load, cap=cap,
+                  draft_device_map=str(getattr(draft, "hf_device_map", draft.device)),
+                  target_device_map=str(getattr(target, "hf_device_map", target.device)),
+                  official_select_dtype_device="official compress: AttentionCache output tensor as-is", items=[])
     for k, s in enumerate(ds):
         sid = dev[k]
         enc = ip.encode(s["input"], device=model.device)
-        torch.cuda.synchronize(); t1 = time.perf_counter()
+        torch.cuda.reset_peak_memory_stats(); torch.cuda.synchronize(); t1 = time.perf_counter()
         out_a = run_sample(model, ip, s["input"], ds.max_new_tokens)
         torch.cuda.synchronize(); t_a = time.perf_counter() - t1
+        peak_a = torch.cuda.max_memory_allocated() / 2**20
         sel_a = captured[-1]
         if k == 0:
-            run_sample(model, ip, s["input"], ds.max_new_tokens)
-            det = captured[-1] == sel_a
+            out_a2 = run_sample(model, ip, s["input"], ds.max_new_tokens)
+            det_sel, det_out = captured[-1] == sel_a, out_a2 == out_a
         res = repro.compress(CompressRequest(rows[sid]["context"], rows[sid]["input"], cap, tok, PromptSpec()))
         x = torch.tensor([res.info["raw_ids"]], device=target.device)
         with torch.inference_mode():  # official profile: same kwargs as run_sample, unpatched target generate
@@ -101,13 +105,17 @@ def main():
             selected_equal=sel_a == res.info["raw_ids"], n_sel_a=len(sel_a), n_sel_b=len(res.info["raw_ids"]),
             selected_overlap=len(set(map(tuple, enumerate(sel_a))) & set(map(tuple, enumerate(res.info["raw_ids"])))) / max(1, len(sel_a)),
             output_a=out_a, output_b=out_b, output_equal=out_a.strip() == out_b.strip(), t_official_s=t_a,
-            suffix_kept=res.info["suffix_kept"], suffix_len=res.info["suffix_len"]))
+            peak_mem_official_mb=peak_a, harness_score_dtype=res.info.get("score_dtype"),
+            harness_select_device=res.info.get("select_device"),
+            suffix_kept=res.info["suffix_kept"], suffix_len=res.info["suffix_len"],
+            prefix_kept=res.info["prefix_kept"], prefix_len=res.info["prefix_len"]))
         if k == 0:
-            report["items"][-1]["official_deterministic_rerun"] = det
+            report["items"][-1]["official_rerun_selected_equal"] = det_sel
+            report["items"][-1]["official_rerun_output_equal"] = det_out
     metrics, _ = ds.compute_metrics(predictions=[i["output_a"] for i in report["items"]],
                                     references=[{"answers": rows[s]["answers"], "all_classes": None} for s in dev])
     report["official_score_on_smoke_items"] = metrics
-    out = ROOT / "runs" / f"smoke-specpc-official-{time.strftime('%Y%m%d-%H%M%S')}"
+    out = ROOT / "runs" / "real" / f"smoke-specpc-official-{time.strftime('%Y%m%d-%H%M%S')}"
     out.mkdir(parents=True)
     (out / "report.json").write_text(json.dumps(report, indent=1, ensure_ascii=False))
     print(json.dumps(report, indent=1, ensure_ascii=False)[:4000])

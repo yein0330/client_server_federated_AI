@@ -171,8 +171,8 @@ def test_repro_uses_joint_tokenization_and_official_window(tok, lb_items):
 
 def test_restoration_diagnostic_rules(tok, joined, manual_dev):
     from ccpilot.diagnostic import build_conditions
-    from ccpilot.manual import diag_eligible, score_requirements
-    
+    from ccpilot.manual import diag_eligible, evaluate_manual, score_requirements
+
     prompt = PromptSpec()
     items = {i["sample_id"]: i for i in joined}
     n_app = 0
@@ -182,21 +182,20 @@ def test_restoration_diagnostic_rules(tok, joined, manual_dev):
         it = items[sid]
         C = 1024 - prompt.fixed_len(tok, it["question"])
         res = UniformSelect().compress(CompressRequest(it["context"], None, C, tok, prompt))
-        st = {e["rid"]: e["status"] for e in score_requirements(it["context"], a, res.kept_intervals)["evidence"]}
+        ev = evaluate_manual(it["context"], a, res.kept_intervals, tok.decode(res.context_ids))
+        missing = [e["rid"] for e in ev["requirements"] if not e["intact"]]
         out = build_conditions(it["context"], tok.encode(it["context"]), tok.offsets(it["context"]),
-                               res.kept_intervals, a, st, C, it["answers"])
+                               res.kept_intervals, a, missing, C, it["answers"])
         if not out["applicable"]:
             continue
         n_app += 1
         c = out["conditions"]
-        assert c["diag_control"]["n_added"] == c["diag_restore"]["n_added"] == out["n_add"]
+        assert c["diag_restore"]["n_tokens"] == c["diag_control"]["n_tokens"] <= C
         for name in ("diag_restore", "diag_control"):
-            assert len(c[name]["context_ids"]) <= C, name
-            n = len(prompt.assemble(tok, c[name]["context_ids"], it["question"]))
-            assert n <= 1024
+            assert len(prompt.assemble(tok, c[name]["context_ids"], it["question"])) <= 1024
         after = score_requirements(it["context"], a, c["diag_restore"]["kept_intervals"])
-        assert after["all_preserved"], sid
-        ctrl = score_requirements(it["context"], a, c["diag_control"]["kept_intervals"])
+        assert all(e["status"] == "preserved" for e in after["evidence"] if e["rid"] in missing), sid
         before = score_requirements(it["context"], a, res.kept_intervals)
-        assert ctrl["n_preserved"] >= before["n_preserved"] - 0  # control never removes kept evidence
+        ctrl = score_requirements(it["context"], a, c["diag_control"]["kept_intervals"])
+        assert ctrl["n_preserved"] >= before["n_preserved"]  # common removal never touches required quotes
     assert n_app >= 5

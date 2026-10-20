@@ -47,9 +47,15 @@ def make_draft_score_fn(model_name="Qwen/Qwen2.5-0.5B-Instruct", revision="7ae55
 
     @torch.inference_mode()
     def score_fn(ids):
+        """Returns the official aggregated attention for batch row 0 UNCHANGED (device and dtype
+        as produced by AttentionCache, i.e. what official specpc_compress_prompt feeds to the
+        selection function). The lookahead token(s) are kept for provenance only."""
         x = torch.tensor([ids], device=device)
-        attn, _ = generate_aggregated_attention(model, cfg, input_ids=x, attention_mask=torch.ones_like(x), **gen)
+        attn, look = generate_aggregated_attention(model, cfg, input_ids=x, attention_mask=torch.ones_like(x), **gen)
         torch.cuda.synchronize()
-        return attn[0].float().cpu().numpy()
+        score_fn.last_lookahead = look[0].tolist()
+        return attn[0]
+
+    score_fn.last_lookahead = None
 
     return score_fn

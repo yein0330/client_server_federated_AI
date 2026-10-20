@@ -1,0 +1,78 @@
+{
+ "selector_origin": "import",
+ "t_load_s": 0.38394068798515946,
+ "items": [
+  {
+   "sample_id": "11a7ad9d646184c16480376226d58f1b2754b095563c8344",
+   "L": 16128,
+   "dtype": "torch.bfloat16",
+   "device": "cuda:0",
+   "n_duplicate_raw_scores": 14311,
+   "t_score_s": 1.132276774966158,
+   "lookahead": [
+    1001
+   ],
+   "gpu_native": {
+    "score_dtype": "torch.bfloat16",
+    "select_device": "cuda:0"
+   },
+   "cpu64": {
+    "score_dtype": "torch.float64",
+    "select_device": "cpu"
+   },
+   "equal_gpu_vs_cpu64": false,
+   "jaccard_gpu_vs_cpu64": 0.9980487804878049,
+   "equal_gpu_vs_port": true,
+   "jaccard_gpu_vs_port": 1.0,
+   "peak_mem_mb": 1525.33837890625
+  },
+  {
+   "sample_id": "1a71b5a73ffb21cb52d41e09b1f861748b60f1e59273a080",
+   "L": 11255,
+   "dtype": "torch.bfloat16",
+   "device": "cuda:0",
+   "n_duplicate_raw_scores": 9640,
+   "t_score_s": 0.13290355599019676,
+   "lookahead": [
+    785
+   ],
+   "gpu_native": {
+    "score_dtype": "torch.bfloat16",
+    "select_device": "cuda:0"
+   },
+   "cpu64": {
+    "score_dtype": "torch.float64",
+    "select_device": "cpu"
+   },
+   "equal_gpu_vs_cpu64": false,
+   "jaccard_gpu_vs_cpu64": 0.9922178988326849,
+   "equal_gpu_vs_port": true,
+   "jaccard_gpu_vs_port": 1.0,
+   "peak_mem_mb": 1525.33837890625
+  },
+  {
+   "sample_id": "203709148e7052e14bf493f95037458b606b42f2fff54c79",
+   "L": 16994,
+   "dtype": "torch.bfloat16",
+   "device": "cuda:0",
+   "n_duplicate_raw_scores": 15335,
+   "t_score_s": 0.23053495003841817,
+   "lookahead": [
+    41215
+   ],
+   "gpu_native": {
+    "score_dtype": "torch.bfloat16",
+    "select_device": "cuda:0"
+   },
+   "cpu64": {
+    "score_dtype": "torch.float64",
+    "select_device": "cpu"
+   },
+   "equal_gpu_vs_cpu64": false,
+   "jaccard_gpu_vs_cpu64": 0.9579349904397706,
+   "equal_gpu_vs_port": true,
+   "jaccard_gpu_vs_port": 1.0,
+   "peak_mem_mb": 1553.80712890625
+  }
+ ]
+}
