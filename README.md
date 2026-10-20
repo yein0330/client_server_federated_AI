@@ -12,6 +12,7 @@
 - 근거 주석 규칙 v1: `docs/06_annotation_rules.md` (주석: `data/annotations/`)
 - 공식 재현 vs pilot, 복원 진단 규칙: `docs/07_flows_and_diagnostic.md`
 - **실제 모델 dev 결과: `docs/08_real_dev_results.md`**
+- **후속 진단(출력 제한·질문만·근거 삭제·맥락 복원): `docs/09_real_dev_v2_results.md`**, `runs/real/real-dev-v2/`
 
 ## 재현 (모델 없음)
 ```

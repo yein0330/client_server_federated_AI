@@ -65,6 +65,7 @@ RESULT_FIELDS: dict[str, tuple[tuple, bool, str]] = {
     "hit_max_new_tokens": ((bool,), True, "generation stopped by max_new_tokens"),
     "evidence_manual_ai": ((dict,), True, "AI-written annotation (not human-verified): char rate + key terms"),
     "em_semantic_review": ((str,), True, "manual (AI) review label for EM-ambiguous answers"),
+    "edit": ((dict,), True, "diagnostic edit: removed/added source spans, token counts, rule version"),
     "error": ((str,), True, "error message"),
     "excluded": ((str,), True, "exclusion reason (rule id)"),
 }

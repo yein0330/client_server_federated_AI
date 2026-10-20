@@ -115,3 +115,16 @@ class PromptSpec:
 
     def assemble(self, tok: TokenizerLike, context_ids: list[int], question: str) -> list[int]:
         return self.prefix_ids(tok) + list(context_ids) + self.suffix_ids(tok, question)
+
+
+# Question-only variant (no context). Minimal edit of LONGBENCH_HOTPOTQA:
+#  - removed "based on the given passages" (x2), "The following are given passages.\n{context}\n\n"
+#    and the duplicated instruction; kept "Only give me the answer and do not output any other words."
+#  - same chat template/system prompt, same "Question: {input}\nAnswer:" ending.
+#  The {context} slot is kept (always empty) so segmented assembly is unchanged.
+QUESTION_ONLY = ("Answer the question. Only give me the answer and do not output any other words.\n\n"
+                 "{context}Question: {input}\nAnswer:")
+
+
+def question_only_spec() -> "PromptSpec":
+    return PromptSpec(template=QUESTION_ONLY, spec_id="qonly_qwen25chat_seg_v1")

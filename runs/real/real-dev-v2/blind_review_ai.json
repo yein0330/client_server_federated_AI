@@ -1,0 +1,315 @@
+{
+ "reviewer": "Claude (AI assistant, claude-opus-5-5) - NOT human",
+ "procedure": "blind: shown only question, gold, answer; condition/model hidden; seed-shuffled; rows with em=true are taken as correct and were not shown",
+ "criteria": "correct = names the gold referent without contradiction or competing answers; ambiguous = partial/hedged or correct link inside a false main claim; gold string alone is not sufficient",
+ "labels": {
+  "b000": [
+   "correct",
+   "Viscount Gort = Lord Gort"
+  ],
+  "b001": [
+   "incorrect",
+   ""
+  ],
+  "b002": [
+   "incorrect",
+   ""
+  ],
+  "b003": [
+   "incorrect",
+   ""
+  ],
+  "b004": [
+   "incorrect",
+   ""
+  ],
+  "b005": [
+   "incorrect",
+   ""
+  ],
+  "b006": [
+   "incorrect",
+   ""
+  ],
+  "b007": [
+   "incorrect",
+   ""
+  ],
+  "b008": [
+   "incorrect",
+   ""
+  ],
+  "b009": [
+   "incorrect",
+   ""
+  ],
+  "b010": [
+   "incorrect",
+   ""
+  ],
+  "b011": [
+   "ambiguous",
+   "names the taluk '(Tharangambadi) Taluk', not the town"
+  ],
+  "b012": [
+   "incorrect",
+   ""
+  ],
+  "b013": [
+   "incorrect",
+   ""
+  ],
+  "b014": [
+   "correct",
+   "reason (Alzheimer's) stated, paraphrased"
+  ],
+  "b015": [
+   "incorrect",
+   ""
+  ],
+  "b016": [
+   "incorrect",
+   ""
+  ],
+  "b017": [
+   "correct",
+   ""
+  ],
+  "b018": [
+   "correct",
+   ""
+  ],
+  "b019": [
+   "incorrect",
+   ""
+  ],
+  "b020": [
+   "incorrect",
+   ""
+  ],
+  "b021": [
+   "incorrect",
+   ""
+  ],
+  "b022": [
+   "ambiguous",
+   "names the taluk, not the town"
+  ],
+  "b023": [
+   "incorrect",
+   ""
+  ],
+  "b024": [
+   "correct",
+   ""
+  ],
+  "b025": [
+   "incorrect",
+   ""
+  ],
+  "b026": [
+   "incorrect",
+   ""
+  ],
+  "b027": [
+   "correct",
+   "Sanskrit link stated; extra vimana detail is from the context"
+  ],
+  "b028": [
+   "incorrect",
+   ""
+  ],
+  "b029": [
+   "correct",
+   "43,000"
+  ],
+  "b030": [
+   "correct",
+   ""
+  ],
+  "b031": [
+   "ambiguous",
+   "states the Sanskrit 'gaja' link but the main claim (Nepalese folklore character) is false"
+  ],
+  "b032": [
+   "incorrect",
+   ""
+  ],
+  "b033": [
+   "incorrect",
+   ""
+  ],
+  "b034": [
+   "incorrect",
+   ""
+  ],
+  "b035": [
+   "correct",
+   ""
+  ],
+  "b036": [
+   "incorrect",
+   ""
+  ],
+  "b037": [
+   "incorrect",
+   ""
+  ],
+  "b038": [
+   "correct",
+   ""
+  ],
+  "b039": [
+   "correct",
+   ""
+  ],
+  "b040": [
+   "incorrect",
+   ""
+  ],
+  "b041": [
+   "correct",
+   "43,000"
+  ],
+  "b042": [
+   "incorrect",
+   ""
+  ],
+  "b043": [
+   "correct",
+   ""
+  ],
+  "b044": [
+   "incorrect",
+   ""
+  ],
+  "b045": [
+   "incorrect",
+   ""
+  ],
+  "b046": [
+   "incorrect",
+   ""
+  ],
+  "b047": [
+   "incorrect",
+   ""
+  ],
+  "b048": [
+   "incorrect",
+   ""
+  ],
+  "b049": [
+   "incorrect",
+   ""
+  ],
+  "b050": [
+   "incorrect",
+   ""
+  ],
+  "b051": [
+   "incorrect",
+   ""
+  ],
+  "b052": [
+   "incorrect",
+   ""
+  ],
+  "b053": [
+   "incorrect",
+   ""
+  ],
+  "b054": [
+   "correct",
+   ""
+  ],
+  "b055": [
+   "correct",
+   ""
+  ],
+  "b056": [
+   "correct",
+   ""
+  ],
+  "b057": [
+   "correct",
+   ""
+  ],
+  "b058": [
+   "incorrect",
+   ""
+  ],
+  "b059": [
+   "incorrect",
+   ""
+  ],
+  "b060": [
+   "incorrect",
+   ""
+  ],
+  "b061": [
+   "correct",
+   "full name without title = Lord Gort"
+  ],
+  "b062": [
+   "incorrect",
+   ""
+  ],
+  "b063": [
+   "incorrect",
+   ""
+  ],
+  "b064": [
+   "correct",
+   ""
+  ],
+  "b065": [
+   "correct",
+   "states green and yellow"
+  ],
+  "b066": [
+   "incorrect",
+   ""
+  ],
+  "b067": [
+   "incorrect",
+   ""
+  ],
+  "b068": [
+   "incorrect",
+   ""
+  ],
+  "b069": [
+   "incorrect",
+   ""
+  ],
+  "b070": [
+   "incorrect",
+   ""
+  ],
+  "b071": [
+   "correct",
+   ""
+  ],
+  "b072": [
+   "incorrect",
+   ""
+  ],
+  "b073": [
+   "correct",
+   ""
+  ],
+  "b074": [
+   "correct",
+   "states green and yellow"
+  ],
+  "b075": [
+   "incorrect",
+   ""
+  ],
+  "b076": [
+   "correct",
+   "'town of Tharangambadi'"
+  ]
+ }
+}

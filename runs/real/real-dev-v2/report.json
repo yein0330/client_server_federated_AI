@@ -1,0 +1,762 @@
+{
+ "run": "real-dev-v2",
+ "n_rows": {
+  "main": 100,
+  "del": 34,
+  "ctx": 2
+ },
+ "duplicates": 0,
+ "errors": 0,
+ "hit_max_v2": 0,
+ "conditions_v2_128": {
+  "S-full": {
+   "n": 20,
+   "f1": 0.343,
+   "em": 0.25,
+   "sem_correct": 8,
+   "sem_ambiguous": 0,
+   "hit_max": 0
+  },
+  "L-full": {
+   "n": 20,
+   "f1": 0.754,
+   "em": 0.7,
+   "sem_correct": 17,
+   "sem_ambiguous": 0,
+   "hit_max": 0
+  },
+  "S-compressed": {
+   "n": 20,
+   "f1": 0.48,
+   "em": 0.35,
+   "sem_correct": 12,
+   "sem_ambiguous": 1,
+   "hit_max": 0
+  },
+  "L-compressed": {
+   "n": 20,
+   "f1": 0.7,
+   "em": 0.6,
+   "sem_correct": 17,
+   "sem_ambiguous": 0,
+   "hit_max": 0
+  },
+  "L-question-only": {
+   "n": 20,
+   "f1": 0.236,
+   "em": 0.2,
+   "sem_correct": 4,
+   "sem_ambiguous": 1,
+   "hit_max": 0
+  }
+ },
+ "conditions_v1_32_blind_relabel": {
+  "S-full": {
+   "n": 20,
+   "f1": 0.337,
+   "em": 0.25,
+   "sem_correct": 8,
+   "sem_ambiguous": 0,
+   "hit_max": 2
+  },
+  "L-full": {
+   "n": 20,
+   "f1": 0.758,
+   "em": 0.7,
+   "sem_correct": 17,
+   "sem_ambiguous": 0,
+   "hit_max": 1
+  },
+  "S-compressed": {
+   "n": 20,
+   "f1": 0.475,
+   "em": 0.35,
+   "sem_correct": 11,
+   "sem_ambiguous": 1,
+   "hit_max": 3
+  },
+  "L-compressed": {
+   "n": 20,
+   "f1": 0.704,
+   "em": 0.6,
+   "sem_correct": 17,
+   "sem_ambiguous": 0,
+   "hit_max": 1
+  }
+ },
+ "v1_vs_v2_changed": [
+  {
+   "item": "11a7ad9d",
+   "cond": "S-compressed",
+   "same_input": true,
+   "v1": "ambiguous",
+   "v1_hitmax": true,
+   "v2": "ambiguous",
+   "v2_hitmax": false,
+   "v1_ans": "Thirukkalachery is a village in the Mayiladuthurai District, Tranquebar (Tharangambadi) Ta",
+   "v2_ans": "Thirukkalachery is a village in the Mayiladuthurai District, Tranquebar (Tharangambadi) Taluk, Tamil Nadu, India."
+  },
+  {
+   "item": "3e4cce50",
+   "cond": "S-full",
+   "same_input": true,
+   "v1": "correct",
+   "v1_hitmax": true,
+   "v2": "correct",
+   "v2_hitmax": false,
+   "v1_ans": "The CEO of the Denver Broncos, Patrick Bowlen, stepped down as the team's CEO in 2014 due ",
+   "v2_ans": "The CEO of the Denver Broncos, Patrick Bowlen, stepped down as the team's CEO in 2014 due to the onset and progression of Alzheimer's disease."
+  },
+  {
+   "item": "d9f5437f",
+   "cond": "S-full",
+   "same_input": true,
+   "v1": "incorrect",
+   "v1_hitmax": true,
+   "v2": "incorrect",
+   "v2_hitmax": false,
+   "v1_ans": "Gajabrishta is the back or hip portion of a sitting elephant. The later Cholas of the Chol",
+   "v2_ans": "Gajabrishta is the back or hip portion of a sitting elephant. The later Cholas of the Chola empire in the Indian subcontinent, especially the ones in Thondai Mandalam around the North Tamil Nadu area "
+  },
+  {
+   "item": "d9f5437f",
+   "cond": "L-full",
+   "same_input": true,
+   "v1": "correct",
+   "v1_hitmax": true,
+   "v2": "correct",
+   "v2_hitmax": false,
+   "v1_ans": "Gaja in Sanskrit means elephant, and 'Brishta' refers to the back or hip portion of a sitt",
+   "v2_ans": "Gaja in Sanskrit means elephant, and 'Brishta' refers to the back or hip portion of a sitting elephant. Therefore, Gajabrishta is connected to elephants as it describes a style of vimana, or temple to"
+  },
+  {
+   "item": "d9f5437f",
+   "cond": "S-compressed",
+   "same_input": true,
+   "v1": "incorrect",
+   "v1_hitmax": true,
+   "v2": "incorrect",
+   "v2_hitmax": false,
+   "v1_ans": "Gajabrishta is the back or hip portion of a sitting elephant. The later Cholas of the Chol",
+   "v2_ans": "Gajabrishta is the back or hip portion of a sitting elephant. The later Cholas of the Chola empire in the Indian subcontinent, especially the ones in Thondai Mandalam around the North Tamil Nadu area "
+  },
+  {
+   "item": "d9f5437f",
+   "cond": "L-compressed",
+   "same_input": true,
+   "v1": "correct",
+   "v1_hitmax": true,
+   "v2": "correct",
+   "v2_hitmax": false,
+   "v1_ans": "Gaja in Sanskrit means elephant, and 'Brishta' refers to the back or hip portion of a sitt",
+   "v2_ans": "Gaja in Sanskrit means elephant, and 'Brishta' refers to the back or hip portion of a sitting elephant. Therefore, Gajabrishta is connected to elephants as it describes a style of vimana, particularly"
+  },
+  {
+   "item": "f327fe18",
+   "cond": "S-compressed",
+   "same_input": true,
+   "v1": "incorrect",
+   "v1_hitmax": true,
+   "v2": "correct",
+   "v2_hitmax": false,
+   "v1_ans": "The Oregon Duck is the mascot of the University of Oregon Ducks athletic program, based on",
+   "v2_ans": "The Oregon Duck is the mascot of the University of Oregon Ducks athletic program, based on Disney's Donald Duck character through a special license agreement. The mascot wears a green and yellow costu"
+  }
+ ],
+ "inputs_identical_v1_v2": 80,
+ "persisting_compression_failures_128": {
+  "S": {
+   "full_ok_comp_not": [],
+   "full_not_comp_ok": [
+    "20370914",
+    "a2bb6c8d",
+    "c9ee71b5",
+    "d3b2acfd"
+   ]
+  },
+  "L": {
+   "full_ok_comp_not": [
+    "11a7ad9d"
+   ],
+   "full_not_comp_ok": [
+    "b7af427e"
+   ]
+  }
+ },
+ "four_path_patterns_128 (SF LF SC LC)": {
+  "1111": 8,
+  "0101": 5,
+  "0111": 3,
+  "0100": 1,
+  "0000": 1,
+  "0010": 1,
+  "0001": 1
+ },
+ "question_only": [
+  {
+   "item": "11a7ad9d",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "correct",
+   "comp": "incorrect",
+   "q_only_ans": "Coimbatore town"
+  },
+  {
+   "item": "1a71b5a7",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "The American Jewish Historical Society"
+  },
+  {
+   "item": "20370914",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "Sir John Dill"
+  },
+  {
+   "item": "207efa55",
+   "support": "ambiguous",
+   "q_only": "incorrect",
+   "full": "incorrect",
+   "comp": "incorrect",
+   "q_only_ans": "Around the World in 80 Days"
+  },
+  {
+   "item": "22a41227",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "Dakota Johnson"
+  },
+  {
+   "item": "3e4cce50",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "The CEO of the Denver Broncos stepped down in 2014 due to personal reasons."
+  },
+  {
+   "item": "54d14873",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "Victory II"
+  },
+  {
+   "item": "6c64a81f",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "1974"
+  },
+  {
+   "item": "74ae5bfc",
+   "support": "supported",
+   "q_only": "correct",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "Iran"
+  },
+  {
+   "item": "77a3188a",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "Taj Malik"
+  },
+  {
+   "item": "826474c9",
+   "support": "supported_premise_mismatch",
+   "q_only": "incorrect",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "Elvise"
+  },
+  {
+   "item": "a2bb6c8d",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "incorrect",
+   "comp": "incorrect",
+   "q_only_ans": "1887"
+  },
+  {
+   "item": "a93aa642",
+   "support": "supported",
+   "q_only": "correct",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "American"
+  },
+  {
+   "item": "b4dfcf1c",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "Cannington"
+  },
+  {
+   "item": "b7af427e",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "incorrect",
+   "comp": "correct",
+   "q_only_ans": "10,000"
+  },
+  {
+   "item": "c47c8d3b",
+   "support": "supported",
+   "q_only": "correct",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "Morgan Llywelyn"
+  },
+  {
+   "item": "c9ee71b5",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "2003"
+  },
+  {
+   "item": "d3b2acfd",
+   "support": "weak",
+   "q_only": "correct",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "Brothers Quay"
+  },
+  {
+   "item": "d9f5437f",
+   "support": "supported",
+   "q_only": "ambiguous",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "Gajabrishta is a character from Nepalese folklore, and elephants are often assoc"
+  },
+  {
+   "item": "f327fe18",
+   "support": "supported",
+   "q_only": "incorrect",
+   "full": "correct",
+   "comp": "correct",
+   "q_only_ans": "Crimson and Gold"
+  }
+ ],
+ "question_only_counts": {
+  "q_only_correct": [
+   "74ae5bfc",
+   "a93aa642",
+   "c47c8d3b",
+   "d3b2acfd"
+  ],
+  "q_only_wrong_comp_correct": [
+   "1a71b5a7",
+   "20370914",
+   "22a41227",
+   "3e4cce50",
+   "54d14873",
+   "6c64a81f",
+   "77a3188a",
+   "826474c9",
+   "b4dfcf1c",
+   "b7af427e",
+   "c9ee71b5",
+   "d9f5437f",
+   "f327fe18"
+  ],
+  "q_only_wrong_full_correct": [
+   "11a7ad9d",
+   "1a71b5a7",
+   "20370914",
+   "22a41227",
+   "3e4cce50",
+   "54d14873",
+   "6c64a81f",
+   "77a3188a",
+   "826474c9",
+   "b4dfcf1c",
+   "c9ee71b5",
+   "d9f5437f",
+   "f327fe18"
+  ],
+  "comp_correct_only": [
+   "b7af427e"
+  ],
+  "q_only_correct_but_comp_wrong": []
+ },
+ "deletion": [
+  {
+   "item": "11a7ad9d",
+   "base": "incorrect",
+   "ev_del": "correct",
+   "ctrl_del": "ambiguous",
+   "f1_base": 0.0,
+   "f1_ev": 0.25,
+   "f1_ctrl": 0.154,
+   "n_removed": 70,
+   "n_in": [
+    1978,
+    1978
+   ],
+   "gold_still_visible_after_ev_del": true,
+   "ev_ans": "Thirukkalachery is a village in the town of Tharangambadi.",
+   "ctrl_ans": "Thirukkalachery is a village in the Tranquebar (Tharangambadi) Taluk, Mayiladuth"
+  },
+  {
+   "item": "1a71b5a7",
+   "base": "correct",
+   "ev_del": "incorrect",
+   "ctrl_del": "correct",
+   "f1_base": 0.333,
+   "f1_ev": 0.0,
+   "f1_ctrl": 0.333,
+   "n_removed": 25,
+   "n_in": [
+    2023,
+    2023
+   ],
+   "gold_still_visible_after_ev_del": true,
+   "ev_ans": "The American Psychoanalytic Association",
+   "ctrl_ans": "YIVO Institute for Jewish Research"
+  },
+  {
+   "item": "20370914",
+   "base": "correct",
+   "ev_del": "correct",
+   "ctrl_del": "correct",
+   "f1_base": 0.167,
+   "f1_ev": 0.167,
+   "f1_ctrl": 0.167,
+   "n_removed": 76,
+   "n_in": [
+    1972,
+    1972
+   ],
+   "gold_still_visible_after_ev_del": false,
+   "ev_ans": "Field Marshal John Standish Surtees Prendergast Vereker, 6th Viscount Gort",
+   "ctrl_ans": "Field Marshal John Standish Surtees Prendergast Vereker, 6th Viscount Gort"
+  },
+  {
+   "item": "22a41227",
+   "base": "correct",
+   "ev_del": "correct",
+   "ctrl_del": "correct",
+   "f1_base": 1.0,
+   "f1_ev": 1.0,
+   "f1_ctrl": 1.0,
+   "n_removed": 78,
+   "n_in": [
+    1970,
+    1970
+   ],
+   "gold_still_visible_after_ev_del": true,
+   "ev_ans": "Ellie Kemper",
+   "ctrl_ans": "Ellie Kemper"
+  },
+  {
+   "item": "3e4cce50",
+   "base": "correct",
+   "ev_del": "correct",
+   "ctrl_del": "correct",
+   "f1_base": 1.0,
+   "f1_ev": 0.571,
+   "f1_ctrl": 1.0,
+   "n_removed": 55,
+   "n_in": [
+    1993,
+    1993
+   ],
+   "gold_still_visible_after_ev_del": false,
+   "ev_ans": "Due to complications with Alzheimer's disease.",
+   "ctrl_ans": "Due to the onset and progression of Alzheimer's disease."
+  },
+  {
+   "item": "54d14873",
+   "base": "correct",
+   "ev_del": "incorrect",
+   "ctrl_del": "correct",
+   "f1_base": 1.0,
+   "f1_ev": 0.0,
+   "f1_ctrl": 1.0,
+   "n_removed": 31,
+   "n_in": [
+    2017,
+    2017
+   ],
+   "gold_still_visible_after_ev_del": false,
+   "ev_ans": "Battle of Tskhinvali",
+   "ctrl_ans": "Operation Iceberg"
+  },
+  {
+   "item": "6c64a81f",
+   "base": "correct",
+   "ev_del": "incorrect",
+   "ctrl_del": "correct",
+   "f1_base": 1.0,
+   "f1_ev": 0.0,
+   "f1_ctrl": 1.0,
+   "n_removed": 60,
+   "n_in": [
+    1988,
+    1988
+   ],
+   "gold_still_visible_after_ev_del": false,
+   "ev_ans": "1975",
+   "ctrl_ans": "1978"
+  },
+  {
+   "item": "74ae5bfc",
+   "base": "correct",
+   "ev_del": "correct",
+   "ctrl_del": "correct",
+   "f1_base": 1.0,
+   "f1_ev": 1.0,
+   "f1_ctrl": 1.0,
+   "n_removed": 26,
+   "n_in": [
+    2022,
+    2022
+   ],
+   "gold_still_visible_after_ev_del": true,
+   "ev_ans": "Iran",
+   "ctrl_ans": "Iran"
+  },
+  {
+   "item": "77a3188a",
+   "base": "correct",
+   "ev_del": "correct",
+   "ctrl_del": "correct",
+   "f1_base": 0.8,
+   "f1_ev": 0.8,
+   "f1_ctrl": 0.8,
+   "n_removed": 90,
+   "n_in": [
+    1958,
+    1958
+   ],
+   "gold_still_visible_after_ev_del": true,
+   "ev_ans": "Man Haron Monis",
+   "ctrl_ans": "Man Haron Monis"
+  },
+  {
+   "item": "a2bb6c8d",
+   "base": "incorrect",
+   "ev_del": "incorrect",
+   "ctrl_del": "incorrect",
+   "f1_base": 0.0,
+   "f1_ev": 0.0,
+   "f1_ctrl": 0.0,
+   "n_removed": 50,
+   "n_in": [
+    1998,
+    1998
+   ],
+   "gold_still_visible_after_ev_del": false,
+   "ev_ans": "1891",
+   "ctrl_ans": "1891"
+  },
+  {
+   "item": "a93aa642",
+   "base": "correct",
+   "ev_del": "correct",
+   "ctrl_del": "correct",
+   "f1_base": 1.0,
+   "f1_ev": 1.0,
+   "f1_ctrl": 1.0,
+   "n_removed": 65,
+   "n_in": [
+    1983,
+    1983
+   ],
+   "gold_still_visible_after_ev_del": true,
+   "ev_ans": "American",
+   "ctrl_ans": "American"
+  },
+  {
+   "item": "b4dfcf1c",
+   "base": "correct",
+   "ev_del": "incorrect",
+   "ctrl_del": "correct",
+   "f1_base": 1.0,
+   "f1_ev": 0.0,
+   "f1_ctrl": 1.0,
+   "n_removed": 51,
+   "n_in": [
+    1997,
+    1997
+   ],
+   "gold_still_visible_after_ev_del": true,
+   "ev_ans": "Leederville",
+   "ctrl_ans": "Bassendean"
+  },
+  {
+   "item": "b7af427e",
+   "base": "correct",
+   "ev_del": "incorrect",
+   "ctrl_del": "correct",
+   "f1_base": 0.667,
+   "f1_ev": 0.0,
+   "f1_ctrl": 0.667,
+   "n_removed": 36,
+   "n_in": [
+    2012,
+    2012
+   ],
+   "gold_still_visible_after_ev_del": false,
+   "ev_ans": "17,000",
+   "ctrl_ans": "43,000"
+  },
+  {
+   "item": "c47c8d3b",
+   "base": "correct",
+   "ev_del": "correct",
+   "ctrl_del": "correct",
+   "f1_base": 1.0,
+   "f1_ev": 1.0,
+   "f1_ctrl": 1.0,
+   "n_removed": 74,
+   "n_in": [
+    1974,
+    1974
+   ],
+   "gold_still_visible_after_ev_del": true,
+   "ev_ans": "Morgan Llywelyn",
+   "ctrl_ans": "Morgan Llywelyn"
+  },
+  {
+   "item": "c9ee71b5",
+   "base": "correct",
+   "ev_del": "incorrect",
+   "ctrl_del": "correct",
+   "f1_base": 1.0,
+   "f1_ev": 0.0,
+   "f1_ctrl": 1.0,
+   "n_removed": 69,
+   "n_in": [
+    1979,
+    1979
+   ],
+   "gold_still_visible_after_ev_del": false,
+   "ev_ans": "2018",
+   "ctrl_ans": "1998"
+  },
+  {
+   "item": "d9f5437f",
+   "base": "correct",
+   "ev_del": "incorrect",
+   "ctrl_del": "incorrect",
+   "f1_base": 0.041,
+   "f1_ev": 0.0,
+   "f1_ctrl": 0.0,
+   "n_removed": 8,
+   "n_in": [
+    2040,
+    2040
+   ],
+   "gold_still_visible_after_ev_del": false,
+   "ev_ans": "'Brishta' is the back or hip portion of a sitting elephant, and this style of vi",
+   "ctrl_ans": "Gajabrishta refers to the back or hip portion of a sitting elephant."
+  },
+  {
+   "item": "f327fe18",
+   "base": "correct",
+   "ev_del": "correct",
+   "ctrl_del": "correct",
+   "f1_base": 1.0,
+   "f1_ev": 1.0,
+   "f1_ctrl": 1.0,
+   "n_removed": 19,
+   "n_in": [
+    2029,
+    2029
+   ],
+   "gold_still_visible_after_ev_del": true,
+   "ev_ans": "green and yellow",
+   "ctrl_ans": "green and yellow"
+  }
+ ],
+ "deletion_summary": {
+  "n": 17,
+  "base_correct": 15,
+  "ev_correct": 9,
+  "ctrl_correct": 14,
+  "transitions": {
+   "ev_del": {
+    "base_no->ok": 1,
+    "base_ok->no": 7,
+    "base_ok->ok": 8,
+    "base_no->no": 1
+   },
+   "ctrl_del": {
+    "base_no->no": 2,
+    "base_ok->ok": 14,
+    "base_ok->no": 1
+   }
+  },
+  "ev_drop_only": [
+   "1a71b5a7",
+   "54d14873",
+   "6c64a81f",
+   "b4dfcf1c",
+   "b7af427e",
+   "c9ee71b5"
+  ],
+  "ctrl_drop_only": [],
+  "both_drop": [
+   "d9f5437f"
+  ],
+  "paired_correct_ev_minus_ctrl": {
+   "mean": -0.29411764705882354,
+   "lo": -0.5882352941176471,
+   "hi": 0.0,
+   "n": 17
+  },
+  "paired_f1_ev_minus_base": {
+   "mean": -0.30705882352941183,
+   "lo": -0.5210588235294118,
+   "hi": -0.111,
+   "n": 17
+  },
+  "paired_f1_ctrl_minus_base": {
+   "mean": 0.006647058823529411,
+   "lo": -0.0072352941176470585,
+   "hi": 0.02717647058823529,
+   "n": 17
+  },
+  "ev_correct_with_gold_visible": 7,
+  "ev_correct_without_gold_visible": 2,
+  "equal_lengths": true
+ },
+ "ctx": [
+  {
+   "item": "11a7ad9d",
+   "cond": "L-context-restore",
+   "sem": "correct",
+   "ans": "Tharangambadi",
+   "n_in": 2048,
+   "added": 120,
+   "removed": 120
+  },
+  {
+   "item": "11a7ad9d",
+   "cond": "L-context-control",
+   "sem": "correct",
+   "ans": "Tharangambadi",
+   "n_in": 2048,
+   "added": 120,
+   "removed": 120
+  }
+ ]
+}

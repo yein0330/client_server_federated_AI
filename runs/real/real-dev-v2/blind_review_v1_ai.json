@@ -1,0 +1,56 @@
+{
+ "reviewer": "Claude (AI) - NOT human",
+ "procedure": "blind re-judgement of real-dev-v1 EM-false answers; answers textually identical to a blind-judged v2 answer of the same item reuse that label",
+ "labels": {
+  "v000": {
+   "v1_row": 95,
+   "label": "correct",
+   "note": "Sanskrit link stated; truncated"
+  },
+  "v001": {
+   "v1_row": 37,
+   "label": "incorrect",
+   "note": "no Sanskrit link; truncated"
+  },
+  "v002": {
+   "v1_row": 10,
+   "label": "correct",
+   "note": "reason stated; truncated before 'disease'"
+  },
+  "v003": {
+   "v1_row": 39,
+   "label": "incorrect",
+   "note": "truncated before colours"
+  },
+  "v004": {
+   "v1_row": 94,
+   "label": "correct",
+   "note": "Sanskrit link stated; truncated"
+  },
+  "v005": {
+   "v1_row": 1,
+   "label": "ambiguous",
+   "note": "names the taluk, not the town; truncated"
+  },
+  "v006": {
+   "v1_row": 96,
+   "label": "incorrect",
+   "note": ""
+  },
+  "v007": {
+   "v1_row": 84,
+   "label": "incorrect",
+   "note": ""
+  },
+  "v008": {
+   "v1_row": 36,
+   "label": "incorrect",
+   "note": "no Sanskrit link; truncated"
+  },
+  "v009": {
+   "v1_row": 75,
+   "label": "incorrect",
+   "note": ""
+  }
+ }
+}

@@ -58,7 +58,7 @@ def answer(item, art, *, condition, server, tok, prompt, run_id, cfg_id, split, 
         prediction=None, answers=item["answers"], qa_f1=None, em=None, contains=None, evidence=None, error=None,
         excluded=None, backend=backend, condition=condition, answer_model=None, compressor_id=art["compressor_id"],
         compression_artifact=art["artifact_id"], context_ids_sha=art["context_ids_sha"], server_input_check=None,
-        gpu_peak_mem_mb=None, hit_max_new_tokens=None, evidence_manual_ai=None, em_semantic_review=None)
+        gpu_peak_mem_mb=None, hit_max_new_tokens=None, evidence_manual_ai=None, em_semantic_review=None, edit=None)
     try:
         header = dict(v=1, assembly="server_template", prompt_spec=prompt.spec_id, tokenizer=tokenizer_ref,
                       tok_sha=tok.sha, req=P.request_id(run_id + condition, item["sample_id"]), question=q)

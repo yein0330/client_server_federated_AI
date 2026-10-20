@@ -17,7 +17,7 @@ import sys
 import time
 
 from ccpilot import payload as P
-from ccpilot.prompt import HFTokenizer, PromptSpec
+from ccpilot.prompt import HFTokenizer, PromptSpec, question_only_spec
 from ccpilot.textutil import word_tokens
 
 # Generation profiles (fixed per server process; recorded in every result row).
@@ -29,6 +29,9 @@ GEN_PROFILES = {
     "official_repro": dict(max_new_tokens=32, do_sample=False, temperature=None, top_p=None),
     "pilot_common": dict(max_new_tokens=32, do_sample=False, temperature=None, top_p=None, top_k=None,
                          repetition_penalty=1.0),
+    # real-dev-v2: identical to pilot_common except max_new_tokens
+    "pilot_common_128": dict(max_new_tokens=128, do_sample=False, temperature=None, top_p=None, top_k=None,
+                             repetition_penalty=1.0),
 }
 
 
@@ -114,7 +117,7 @@ def main():
     backend, args = sys.argv[1], json.loads(sys.argv[2])
     t0 = time.perf_counter()
     be = {"mock": MockBackend, "hf": HFBackend}[backend](args)
-    prompt = PromptSpec()
+    specs = {sp.spec_id: sp for sp in (PromptSpec(), question_only_spec())}
     max_input = int(args["max_input_tokens"])
     stdin, stdout = sys.stdin.buffer, sys.stdout.buffer
     _write(stdout, {"t_load_s": time.perf_counter() - t0})
@@ -125,9 +128,9 @@ def main():
             if h["tok_sha"] != be.tok.sha:
                 raise P.BoundaryError("tokenizer mismatch")
             if h["assembly"] == "server_template":
-                if h["prompt_spec"] != prompt.spec_id:
+                if h["prompt_spec"] not in specs:
                     raise P.BoundaryError("prompt_spec mismatch")
-                ids = prompt.assemble(be.tok, ctx_ids, h["question"])
+                ids = specs[h["prompt_spec"]].assemble(be.tok, ctx_ids, h["question"])
             else:
                 ids = ctx_ids
             if len(ids) > max_input:
